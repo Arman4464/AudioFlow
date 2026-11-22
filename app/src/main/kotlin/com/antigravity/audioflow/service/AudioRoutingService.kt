@@ -90,15 +90,26 @@ class AudioRoutingService : Service() {
     private lateinit var controller: AudioRoutingController
     private lateinit var audioManager: AudioManager
     private lateinit var prefs: SharedPreferences
+    private var userAutoOverride: AudioOutputDevice? = null
 
     private val audioDeviceCallback = object : AudioDeviceCallback() {
         override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
+            val now = System.currentTimeMillis()
+            if (now - controller.lastInternalRoutingTimestamp < 1200L) {
+                Log.d(TAG, "Suppressed onAudioDevicesAdded reflection echo")
+                return
+            }
             Log.d(TAG, "Audio devices added")
             updateHardwarePresence()
             reapplyCurrentPolicy()
         }
 
         override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
+            val now = System.currentTimeMillis()
+            if (now - controller.lastInternalRoutingTimestamp < 1200L) {
+                Log.d(TAG, "Suppressed onAudioDevicesRemoved reflection echo")
+                return
+            }
             Log.d(TAG, "Audio devices removed")
             updateHardwarePresence()
             reapplyCurrentPolicy()
@@ -109,10 +120,21 @@ class AudioRoutingService : Service() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 Intent.ACTION_HEADSET_PLUG -> {
+                    val now = System.currentTimeMillis()
+                    val deltaSinceInternal = now - controller.lastInternalRoutingTimestamp
+                    if (deltaSinceInternal < 1200L) {
+                        Log.d(TAG, "Suppressed synthetic HEADSET_PLUG reflection echo (delta: ${deltaSinceInternal}ms)")
+                        return
+                    }
+
                     val state = intent.getIntExtra("state", -1)
                     val isPlugged = state == 1
                     val hasMic = intent.getIntExtra("microphone", 0) == 1
                     Log.d(TAG, "HEADSET_PLUG received: state=$state, hasMic=$hasMic")
+
+                    if (!isPlugged && userAutoOverride == AudioOutputDevice.HEADPHONES) {
+                        userAutoOverride = null
+                    }
 
                     if (_engineState.value.isGlitchGuardEnabled && controller.shouldSuppressJackEvent(state)) {
                         _engineState.update {
@@ -130,7 +152,7 @@ class AudioRoutingService : Service() {
                             hasRealHeadsetWithMic = isPlugged && hasMic,
                             currentOutput = if (isPlugged) {
                                 if (it.mode == AudioRoutingMode.SMART_AUTO) {
-                                    if (!it.ignoreDefectiveJackInAuto || hasMic) AudioOutputDevice.HEADPHONES else it.currentOutput
+                                    userAutoOverride ?: if (!it.ignoreDefectiveJackInAuto || hasMic) AudioOutputDevice.HEADPHONES else it.currentOutput
                                 } else it.currentOutput
                             } else {
                                 if (it.currentOutput == AudioOutputDevice.HEADPHONES) AudioOutputDevice.SPEAKER else it.currentOutput
@@ -193,6 +215,7 @@ class AudioRoutingService : Service() {
                 val outputName = intent.getStringExtra(EXTRA_OUTPUT)
                 val target = outputName?.let { runCatching { AudioOutputDevice.valueOf(it) }.getOrNull() }
                 if (target != null) {
+                    userAutoOverride = target
                     _engineState.update {
                         it.copy(
                             // Preserves current mode (Smart Auto, Forced Lock, or Manual) exactly as is
@@ -209,6 +232,7 @@ class AudioRoutingService : Service() {
                 val modeName = intent.getStringExtra(EXTRA_MODE)
                 val newMode = modeName?.let { runCatching { AudioRoutingMode.valueOf(it) }.getOrNull() }
                 if (newMode != null) {
+                    userAutoOverride = null
                     val targetOutput = intent.getStringExtra(EXTRA_OUTPUT)?.let {
                         runCatching { AudioOutputDevice.valueOf(it) }.getOrNull()
                     } ?: _engineState.value.forcedTargetOutput
@@ -268,13 +292,18 @@ class AudioRoutingService : Service() {
             }
             AudioRoutingMode.SMART_AUTO -> {
                 // In Smart Auto: Bluetooth > USB > Real/Valid Headphones > Built-in Stereo Speaker
-                val hasValidHeadset = state.isHeadsetPhysicallyPlugged && (!state.ignoreDefectiveJackInAuto || state.hasRealHeadsetWithMic)
-
-                val autoTarget = when {
-                    state.isBluetoothConnected -> AudioOutputDevice.BLUETOOTH
-                    state.isUsbConnected -> AudioOutputDevice.USB
-                    hasValidHeadset -> AudioOutputDevice.HEADPHONES
-                    else -> AudioOutputDevice.SPEAKER
+                // If user has explicitly selected an output (userAutoOverride != null), honor user selection!
+                val override = userAutoOverride
+                val autoTarget = if (override != null) {
+                    override
+                } else {
+                    val hasValidHeadset = state.isHeadsetPhysicallyPlugged && (!state.ignoreDefectiveJackInAuto || state.hasRealHeadsetWithMic)
+                    when {
+                        state.isBluetoothConnected -> AudioOutputDevice.BLUETOOTH
+                        state.isUsbConnected -> AudioOutputDevice.USB
+                        hasValidHeadset -> AudioOutputDevice.HEADPHONES
+                        else -> AudioOutputDevice.SPEAKER
+                    }
                 }
                 controller.routeToOutput(autoTarget)
                 _engineState.update { it.copy(currentOutput = autoTarget) }

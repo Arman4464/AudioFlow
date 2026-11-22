@@ -4,108 +4,123 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Outer Soundwave Conduit (Pink #FF2A85) -->
-    <!-- Shadow/Outline -->
-    <path
-        android:strokeColor="#121212"
-        android:strokeWidth="6"
-        android:strokeLineCap="round"
-        android:pathData="M73,34 A26,26 0 0,1 73,74" />
-    <!-- Wave -->
-    <path
-        android:strokeColor="#FF2A85"
-        android:strokeWidth="3.6"
-        android:strokeLineCap="round"
-        android:pathData="M73,34 A26,26 0 0,1 73,74" />
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="-35">
 
-    <!-- Middle Soundwave Conduit (Mint #00FF88) -->
-    <!-- Shadow/Outline -->
-    <path
-        android:strokeColor="#121212"
-        android:strokeWidth="5.5"
-        android:strokeLineCap="round"
-        android:pathData="M65,40 A18,18 0 0,1 65,68" />
-    <!-- Wave -->
-    <path
-        android:strokeColor="#00FF88"
-        android:strokeWidth="3.4"
-        android:strokeLineCap="round"
-        android:pathData="M65,40 A18,18 0 0,1 65,68" />
+        <!-- ========================================================== -->
+        <!-- 1. ACOUSTIC SOUNDWAVE CONDUITS (Thick Bold Neo-Brutalist)  -->
+        <!-- ========================================================== -->
 
-    <!-- Inner Soundwave Conduit (Cyan #00F0FF) -->
-    <!-- Shadow/Outline -->
-    <path
-        android:strokeColor="#121212"
-        android:strokeWidth="5"
-        android:strokeLineCap="round"
-        android:pathData="M57,46 A10,10 0 0,1 57,62" />
-    <!-- Wave -->
-    <path
-        android:strokeColor="#00F0FF"
-        android:strokeWidth="3"
-        android:strokeLineCap="round"
-        android:pathData="M57,46 A10,10 0 0,1 57,62" />
+        <!-- Outer Wave (Hot Pink #FF2A85) -->
+        <path
+            android:strokeColor="#121212"
+            android:strokeWidth="7.5"
+            android:strokeLineCap="round"
+            android:pathData="M92,23 A33,33 0 0,1 92,85" />
+        <path
+            android:strokeColor="#FF2A85"
+            android:strokeWidth="4.5"
+            android:strokeLineCap="round"
+            android:pathData="M92,23 A33,33 0 0,1 92,85" />
 
-    <!-- 3.5mm Audio Jack Plug (Hardware Core) -->
-    <!-- Base Cable Grip -->
-    <path
-        android:fillColor="#1E202B"
-        android:strokeColor="#121212"
-        android:strokeWidth="1.8"
-        android:pathData="M23,51h8v6h-8z" />
+        <!-- Middle Wave (Mint Green #00FF88) -->
+        <path
+            android:strokeColor="#121212"
+            android:strokeWidth="7.5"
+            android:strokeLineCap="round"
+            android:pathData="M84,31 A22,22 0 0,1 84,77" />
+        <path
+            android:strokeColor="#00FF88"
+            android:strokeWidth="4.5"
+            android:strokeLineCap="round"
+            android:pathData="M84,31 A22,22 0 0,1 84,77" />
 
-    <!-- Jack Metal Barrel (Gold #FFE169) -->
-    <path
-        android:fillColor="#FFE169"
-        android:strokeColor="#121212"
-        android:strokeWidth="1.8"
-        android:pathData="M31,48h11v12h-11z" />
-    <!-- Barrel Texture Grooves -->
-    <path
-        android:strokeColor="#121212"
-        android:strokeWidth="1"
-        android:pathData="M34,49v10 M37,49v10 M40,49v10" />
+        <!-- Inner Wave (Electric Cyan #00F0FF) -->
+        <path
+            android:strokeColor="#121212"
+            android:strokeWidth="7"
+            android:strokeLineCap="round"
+            android:pathData="M76,40 A13,13 0 0,1 76,68" />
+        <path
+            android:strokeColor="#00F0FF"
+            android:strokeWidth="4.2"
+            android:strokeLineCap="round"
+            android:pathData="M76,40 A13,13 0 0,1 76,68" />
 
-    <!-- Ground Sleeve -->
+        <!-- ========================================================== -->
+        <!-- 2. CHUNKY NEO-BRUTALIST AUDIO PLUG                         -->
+        <!-- ========================================================== -->
+
+        <!-- Hard Offset Shadow for the entire plug -->
+        <group android:translateX="4" android:translateY="4">
+            <path
+                android:fillColor="#121212"
+                android:pathData="M22,48 h8 v12 h-8 z" />
+            <path
+                android:fillColor="#121212"
+                android:pathData="M30,44 h16 v20 h-16 z" />
+            <path
+                android:fillColor="#121212"
+                android:pathData="M46,46 h18 v16 h-18 z" />
+            <path
+                android:fillColor="#121212"
+                android:pathData="M64,46 l8,4 c2,1.5 2,6.5 0,8 l-8,4 z" />
+        </group>
+
+        <!-- Cable Boot (Dark Charcoal #1E202B) -->
+        <path
+            android:fillColor="#1E202B"
+            android:strokeColor="#121212"
+            android:strokeWidth="2.8"
+            android:pathData="M22,48 h8 v12 h-8 z" />
+
+        <!-- Main Barrel (Vivid Yellow #FFD93D) -->
+        <path
+            android:fillColor="#FFD93D"
+            android:strokeColor="#121212"
+            android:strokeWidth="3.2"
+            android:pathData="M30,44 h16 v20 h-16 z" />
+        <!-- Barrel Ridges -->
+        <path
+            android:strokeColor="#121212"
+            android:strokeWidth="2.2"
+            android:strokeLineCap="round"
+            android:pathData="M35,48 v12 M40,48 v12" />
+
+        <!-- Shaft Contact (Chrome Silver #FFFFFF) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#121212"
+            android:strokeWidth="2.8"
+            android:pathData="M46,46 h12 v16 h-12 z" />
+
+        <!-- Insulator Ring Notch (Solid Black #121212) -->
+        <path
+            android:fillColor="#121212"
+            android:pathData="M58,46 h4 v16 h-4 z" />
+
+        <!-- Bullet Tip (Vivid Gold #FFD93D) -->
+        <path
+            android:fillColor="#FFD93D"
+            android:strokeColor="#121212"
+            android:strokeWidth="2.8"
+            android:pathData="M62,46 l8,4 c2,1.5 2,6.5 0,8 l-8,4 z" />
+
+    </group>
+
+    <!-- Pop Art Spark Star (Top Right) -->
     <path
-        android:fillColor="#D0D3DC"
+        android:fillColor="#FFD93D"
         android:strokeColor="#121212"
-        android:strokeWidth="1.5"
-        android:pathData="M42,50h5v8h-5z" />
+        android:strokeWidth="2"
+        android:pathData="M84,14 l2.5,6 l6,2.5 l-6,2.5 l-2.5,6 l-2.5,-6 l-6,-2.5 l6,-2.5 z" />
 
-    <!-- Insulator Ring 1 -->
-    <path
-        android:fillColor="#121212"
-        android:pathData="M47,50h1.5v8h-1.5z" />
-
-    <!-- Ring Segment (Right Channel) -->
-    <path
-        android:fillColor="#FFE169"
-        android:strokeColor="#121212"
-        android:strokeWidth="1.5"
-        android:pathData="M48.5,50h4v8h-4z" />
-
-    <!-- Insulator Ring 2 -->
-    <path
-        android:fillColor="#121212"
-        android:pathData="M52.5,50h1.5v8h-1.5z" />
-
-    <!-- Precision Tip Segment (Left Channel) -->
-    <path
-        android:fillColor="#FFE169"
-        android:strokeColor="#121212"
-        android:strokeWidth="1.5"
-        android:pathData="M54,50.5l4,1.5c1.5,1 1.5,3 0,4l-4,1.5z" />
-
-    <!-- Spark Accents -->
-    <path
-        android:fillColor="#FFE169"
-        android:strokeColor="#121212"
-        android:strokeWidth="0.8"
-        android:pathData="M78,28l2.5,4h-5z" />
+    <!-- Pop Art Accent Node (Bottom Left) -->
     <path
         android:fillColor="#00F0FF"
         android:strokeColor="#121212"
-        android:strokeWidth="0.8"
-        android:pathData="M81,77l2.5,4h-5z" />
+        android:strokeWidth="2.2"
+        android:pathData="M26,84 a4.5,4.5 0 1,0 0.1,0 z" />
 </vector>

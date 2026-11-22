@@ -78,6 +78,14 @@ class AudioRoutingController(private val context: Context) {
     var suppressedGlitchCount: Int = 0
         private set
 
+    @Volatile
+    var lastInternalRoutingTimestamp: Long = 0L
+        private set
+
+    fun markInternalRoutingAction() {
+        lastInternalRoutingTimestamp = System.currentTimeMillis()
+    }
+
     init {
         findReflectionMethods()
     }
@@ -138,6 +146,7 @@ class AudioRoutingController(private val context: Context) {
      * Invokes AudioSystem.setForceUse via reflection.
      */
     fun setForceUse(usage: Int, config: Int) {
+        markInternalRoutingAction()
         try {
             setForceUseMethod?.invoke(null, usage, config)
             Log.d(TAG, "Invoked AudioSystem.setForceUse(usage=$usage, config=$config)")
@@ -169,6 +178,7 @@ class AudioRoutingController(private val context: Context) {
      * Dispatches low-level wired device connection state to Android AudioService.
      */
     fun setWiredDeviceState(type: Int, state: Int, name: String = "h2w") {
+        markInternalRoutingAction()
         try {
             if (setWiredDeviceConnectionStateMethod4 != null) {
                 setWiredDeviceConnectionStateMethod4?.invoke(audioManager, type, state, "", name)
@@ -186,6 +196,7 @@ class AudioRoutingController(private val context: Context) {
      * Core audio routing engine supporting all Android generations.
      */
     fun routeToOutput(target: AudioOutputDevice): Boolean {
+        markInternalRoutingAction()
         Log.i(TAG, "Routing audio to output target: $target")
         return try {
             when {

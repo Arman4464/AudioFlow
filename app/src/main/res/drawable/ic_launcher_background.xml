@@ -10,12 +10,13 @@
 
     <!-- Subtle brutalist grid accents -->
     <path
-        android:strokeColor="#222533"
-        android:strokeWidth="0.8"
+        android:strokeColor="#202330"
+        android:strokeWidth="1.2"
         android:pathData="M27,0v108 M54,0v108 M81,0v108 M0,27h108 M0,54h108 M0,81h108" />
 
-    <!-- Ambient glowing corner accents -->
+    <!-- Bold Neo-Brutalist inner frame -->
     <path
-        android:fillColor="#151822"
-        android:pathData="M18,18h72v72h-72z" />
+        android:strokeColor="#FFD93D"
+        android:strokeWidth="2"
+        android:pathData="M16,16h76v76h-76z" />
 </vector>
